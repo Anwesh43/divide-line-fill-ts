@@ -213,3 +213,25 @@ class DivideLineFill {
         this.curr.startUpdating(cb)
     }
 }
+
+class Renderer {
+
+    dlf : DivideLineFill = new DivideLineFill()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+       this.dlf.draw(context) 
+    }
+
+    handleTap(cb : Function) {
+        this.dlf.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.dlf.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
+        })
+    }
+}
