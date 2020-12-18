@@ -1,4 +1,4 @@
-import { timeStamp } from "console"
+
 
 const w : number = window.innerWidth 
 const h : number = window.innerHeight 
@@ -46,15 +46,16 @@ class DrawingUtil {
         const size : number = Math.min(w, h) / sizeFactor 
         const gap : number = Math.min(w, h) / gapFactor
         const xGap : number = (2 * size) / bars  
-        const sf : number = ScaleUtil.sinify(scale)
+        const sc1 : number = ScaleUtil.divideScale(scale, 0, parts)
+        const sc2 : number = ScaleUtil.divideScale(scale, 1, parts)
         context.save()
         context.translate(w / 2, h / 2)
         for (var j = 0; j < 2; j++) {
             context.save()
             context.scale(1, 1 - 2 * j)
-            DrawingUtil.drawLine(context, -size * sf, gap, size * sf, gap)
-            for (var k = 0; k < 4; k++) {
-                const sfk : number = ScaleUtil.sinify(ScaleUtil.divideScale(sf, k, parts))
+            DrawingUtil.drawLine(context, -size * (sc1 - sc2), gap, size * (sc1 - sc2), gap)
+            for (var k = 0; k < bars; k++) {
+                const sfk : number = ScaleUtil.sinify(ScaleUtil.divideScale(sc1, k, bars))
                 context.save()
                 context.translate(-size + k * xGap, 0)
                 context.fillRect(0, 0, xGap, xGap * sfk)
