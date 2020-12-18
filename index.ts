@@ -30,3 +30,44 @@ class ScaleUtil {
         return Math.sin(scale * Math.PI)
     }
 }
+
+class DrawingUtil {
+
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
+    static drawLineFill(context : CanvasRenderingContext2D, scale : number) {
+        const size : number = Math.min(w, h) / sizeFactor 
+        const gap : number = Math.min(w, h) / gapFactor
+        const xGap : number = (2 * size) / bars  
+        const sf : number = ScaleUtil.sinify(scale)
+        context.save()
+        context.translate(w / 2, h / 2)
+        for (var j = 0; j < 2; j++) {
+            context.save()
+            context.scale(1, 1 - 2 * j)
+            DrawingUtil.drawLine(context, -size * sf, gap, size * sf, gap)
+            for (var k = 0; k < 4; k++) {
+                const sfk : number = ScaleUtil.sinify(ScaleUtil.divideScale(sf, k, parts))
+                context.save()
+                context.translate(-size + k * xGap, 0)
+                context.fillRect(0, 0, xGap, xGap * sfk)
+                context.restore()
+            }
+            context.restore()
+        }
+        context.restore()
+    }
+
+    static drawDLFNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor
+        context.strokeStyle = colors[i]
+        context.fillStyle = colors[i]
+        DrawingUtil.drawLineFill(context, scale)
+    }
+}
